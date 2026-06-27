@@ -1,8 +1,11 @@
 import pygame
 
 class Entity():
-    def __init__(self):
-        self.image = pygame.image.load("../img/Entity.png")
+    def __init__(self, image_path=None):
+        if image_path is None:
+            self.image = pygame.Surface((1, 1), pygame.SRCALPHA)
+        else:
+            self.image = pygame.image.load(str(image_path)).convert_alpha()
         self.rect = self.image.get_rect()
         self.speed = 0
 
