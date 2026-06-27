@@ -3,17 +3,17 @@ from pygame import Surface, Rect
 from pygame.font import Font
 
 from code.Background import Background
-from code.Consts import WIN_WIDTH, MENU_OPTION, FPS, C_BLACK, MENU_MUSIC_PATH, C_GREEN
+from code.Consts import WIN_WIDTH, MENU_OPTION, FPS, C_BLACK, MENU_MUSIC_PATH, C_GREEN, BG_MENU_PATH
 
 class Menu:
     def __init__(self, window):
         self.window = window
         self.clock = pygame.time.Clock()
-        self.background = Background(window)
-        pygame.mixer.music.load(MENU_MUSIC_PATH)
-        pygame.mixer.music.play(-1)
+        self.background = Background(window, BG_MENU_PATH)
 
     def run(self):
+        pygame.mixer.music.load(MENU_MUSIC_PATH)
+        pygame.mixer.music.play(-1)
         menu_option = 0
         while True:
             self.background.draw()

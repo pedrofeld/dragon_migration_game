@@ -1,12 +1,11 @@
 import pygame
 
-from code.Consts import WIN_WIDTH, WIN_HEIGHT, BG_MENU_PATH
+from code.Consts import WIN_WIDTH, WIN_HEIGHT
 
 class Background():
-    def __init__(self, window, path_image=BG_MENU_PATH):
+    def __init__(self, window, path_image):
         self.window = window
-        self.path_image = path_image
-        self.image = pygame.image.load(str(path_image)).convert()
+        self.image = pygame.image.load(path_image).convert()
         self.image = pygame.transform.scale(self.image, (WIN_WIDTH, WIN_HEIGHT))
         self.scroll_speed = 1
 

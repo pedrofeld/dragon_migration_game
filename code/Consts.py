@@ -1,8 +1,10 @@
 # P
-BG_MENU_PATH = "assets/background/sky_background/background 1/orig.png"
-BG_GAME_PATH = "assets/background/sky_background/background 3/orig.png"
+BG_MENU_PATH = "assets/background/sky_background/background 3/orig.png"
+BG_GAME_PATH = "assets/background/sky_background/background 1/orig.png"
+BG_SCORE_PATH = "assets/background/floor_background/Backgrounds/backgroundCastles.png"
 MENU_MUSIC_PATH = "assets/music/menu_music.mp3"
 GAME_MUSIC_PATH = "assets/music/game_music.mp3"
+SCORE_MUSIC_PATH = "assets/music/score_music.mp3"
 
 # C
 C_BLACK = (0, 0, 0)
