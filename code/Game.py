@@ -1,8 +1,9 @@
 import pygame
 
 from code.Background import Background
-from code.Consts import WIN_WIDTH, WIN_HEIGHT, FPS, GAME_MUSIC_PATH, BG_GAME_PATH, BG_SCORE_PATH, SCORE_MUSIC_PATH
+from code.Consts import WIN_WIDTH, WIN_HEIGHT, FPS, GAME_MUSIC_PATH, BG_GAME_PATH, BG_SCORE_PATH, SCORE_MUSIC_PATH, DRAGON_IMAGE_PATH, BIRD_IMAGE_PATH
 from code.Menu import Menu
+from code.Level import Level
 
 class Game:
     def __init__(self):
@@ -15,6 +16,7 @@ class Game:
         self.score_background = Background(self.window, BG_SCORE_PATH)
         self.menu = Menu(self.window)
         self.state = "menu"
+        self.level = None
 
     def run(self):
         while self.running:
@@ -23,6 +25,7 @@ class Game:
             if choice in ("QUIT", "EXIT", None):
                 self.running = False
             elif choice == "PLAY":
+                self.level = Level(self.window, DRAGON_IMAGE_PATH, BIRD_IMAGE_PATH)
                 pygame.mixer.music.load(GAME_MUSIC_PATH)
                 pygame.mixer.music.play(-1)
                 self.state = "game"
@@ -75,11 +78,16 @@ class Game:
 
     def update(self):
         self.game_background.update()
+        if self.state == "game" and self.level is not None:
+            self.level.update()
 
     def draw(self):
         self.game_background.draw()
-        font = pygame.font.SysFont("Lucida Sans Typewriter", 28)
-        label = font.render("Dragon Migration - em desenvolvimento", True, (255, 255, 255))
-        label_rect = label.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2))
-        self.window.blit(label, label_rect)
+        if self.state == "game" and self.level is not None:
+            self.level.draw()
+        else:
+            font = pygame.font.SysFont("Lucida Sans Typewriter", 28)
+            label = font.render("Dragon Migration - em desenvolvimento", True, (255, 255, 255))
+            label_rect = label.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2))
+            self.window.blit(label, label_rect)
         pygame.display.flip()
