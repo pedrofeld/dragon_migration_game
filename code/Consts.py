@@ -1,7 +1,7 @@
 # B
-BG_GAME_PATH = "assets/background/sky_background/background 1/orig.png"
-BG_MENU_PATH = "assets/background/sky_background/background 3/orig.png"
-BG_SCORE_PATH = "assets/background/floor_background/Backgrounds/backgroundCastles.png"
+BG_GAME_PATH = "assets/background/background 1/orig.png"
+BG_MENU_PATH = "assets/background/background 3/orig.png"
+BG_SCORE_PATH = "assets/background/background 5/orig.png"
 BIRD_IMAGE_PATH = "assets/personagens/birds/Bird 1/Bird Classic 1.png"
 
 # C
