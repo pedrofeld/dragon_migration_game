@@ -5,6 +5,7 @@ from code.Consts import WIN_HEIGHT
 class Bird(Entity):
     def __init__(self, image_path=None, target_width=40):
         super().__init__(image_path)
+        self.health = 5
         self.speed = 2
         try:
             w, h = self.image.get_size()
