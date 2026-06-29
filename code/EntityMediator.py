@@ -16,10 +16,11 @@ class EntityMediator():
         if EntityMediator.verify_collision(ent1, ent2):
             ent2.health = 0
             ent1.score += 5
+            ent1.heal(5)
 
     @staticmethod
     def verify_health(entity_list: list[Entity]):
-        for entity in entity_list:
+        for entity in entity_list[:]:
             if entity.health <= 0:
                 if isinstance(entity, Bird):
                     entity_list.remove(entity)
