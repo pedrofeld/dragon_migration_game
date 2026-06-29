@@ -23,7 +23,6 @@ class Dragon(Entity):
         self.speed = 4
 
     def move(self):
-        # player control using arrow keys
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP] and self.rect.top > 0:
             self.rect.centery -= self.speed
