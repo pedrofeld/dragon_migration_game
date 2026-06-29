@@ -3,6 +3,8 @@ import random
 from code.Consts import WIN_WIDTH, WIN_HEIGHT
 from code.Dragon import Dragon
 from code.Bird import Bird
+from code.EntityMediator import EntityMediator
+
 
 class Level:
     def __init__(self, window, dragon_image_path, bird_image_path):
@@ -15,19 +17,43 @@ class Level:
         self.score = 0
         self.last_spawn = pygame.time.get_ticks()
         self.spawn_interval_ms = 2000
+        self.game_duration = 240000
+        self.start_time = pygame.time.get_ticks()
+        self.last_damage = pygame.time.get_ticks()
 
     def update(self):
         self.dragon.move()
 
         now = pygame.time.get_ticks()
-        if now - self.last_spawn > self.spawn_interval_ms:
+
+        elapsed = now - self.start_time
+        self.remaining = max(0, self.game_duration - elapsed)
+
+        seconds = self.remaining // 1000
+        minutes = seconds // 60
+        seconds = seconds % 60
+        self.time_text = f"{minutes:02}:{seconds:02}"
+
+        if now - self.last_damage >= 1000:
+            self.dragon.take_damage(1)
+            self.last_damage = now
+
+        if now - self.last_spawn >= self.spawn_interval_ms:
             self.spawn_bird()
             self.last_spawn = now
 
-        for bird in list(self.birds):
+        if self.remaining <= 0:
+            self.win = True
+
+        for bird in self.birds[:]:
             bird.update(self.dragon)
+
+            EntityMediator.process_collision(self.dragon, bird)
+
             if bird.rect.right < 0:
                 self.birds.remove(bird)
+
+        EntityMediator.verify_health(self.birds)
 
     def draw(self):
         self.window.blit(self.dragon.image, self.dragon.rect)
