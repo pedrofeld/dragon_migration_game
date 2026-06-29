@@ -4,6 +4,7 @@ from code.Consts import WIN_WIDTH, WIN_HEIGHT
 from code.Dragon import Dragon
 from code.Bird import Bird
 from code.EntityMediator import EntityMediator
+from code.HUD import HUD
 
 
 class Level:
@@ -57,8 +58,13 @@ class Level:
 
     def draw(self):
         self.window.blit(self.dragon.image, self.dragon.rect)
+
         for bird in self.birds:
             self.window.blit(bird.image, bird.rect)
+
+        HUD.draw_hp(self.window, self.dragon.hp)
+        HUD.draw_score(self.window, self.dragon.score)
+        HUD.draw_timer(self.window, self.time_text)
 
     def spawn_bird(self):
         b = Bird(self.bird_image_path)
