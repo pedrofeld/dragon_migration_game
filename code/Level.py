@@ -72,6 +72,3 @@ class Level:
         b.rect.centery = random.randint(20, WIN_HEIGHT - 20)
         b.speed = random.randint(2, 4)
         self.birds.append(b)
-
-    def spawn_spaceship(self):
-        pass
