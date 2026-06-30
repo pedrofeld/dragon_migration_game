@@ -21,6 +21,8 @@ class Level:
         self.game_duration = 240000
         self.start_time = pygame.time.get_ticks()
         self.last_damage = pygame.time.get_ticks()
+        self.finished = False
+        self.result = None
 
     def update(self):
         self.dragon.move()
@@ -64,6 +66,17 @@ class Level:
                 self.birds.remove(bird)
 
         EntityMediator.verify_health(self.birds)
+
+        if self.dragon.hp <= 0:
+            self.finished = True
+            self.result = "lose"
+
+        if self.remaining <= 0 and self.dragon.hp > 0:
+            self.finished = True
+            self.result = "win"
+
+        if self.finished:
+            return
 
     def draw(self):
         self.window.blit(self.dragon.image, self.dragon.rect)

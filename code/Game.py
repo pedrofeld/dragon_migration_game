@@ -1,7 +1,10 @@
+import datetime
+
 import pygame
 
 from code.Background import Background
 from code.Consts import WIN_WIDTH, WIN_HEIGHT, FPS, GAME_MUSIC_PATH, BG_GAME_PATH, BG_SCORE_PATH, SCORE_MUSIC_PATH, DRAGON_IMAGE_PATH, BIRD_IMAGE_PATH
+from code.DBProxy import DBProxy
 from code.Menu import Menu
 from code.Level import Level
 
@@ -17,6 +20,7 @@ class Game:
         self.menu = Menu(self.window)
         self.state = "menu"
         self.level = None
+        self.db = DBProxy()
 
     def run(self):
         while self.running:
@@ -30,15 +34,30 @@ class Game:
                 pygame.mixer.music.play(-1)
                 self.state = "game"
                 self.game_loop()
+                if self.state == "score":
+                    self.show_score_screen()
+                    self.state = "menu"
             elif choice == "SCORE":
-                self.show_score_screen()
+                    self.show_score_screen()
 
+        self.db.close()
         pygame.quit()
 
     def game_loop(self):
         while self.running and self.state == "game":
             self.events()
             self.update()
+            if self.level.finished:
+                self.db.save_score(
+                    self.level.dragon.score,
+                    datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+                )
+                self.db.remove_old_scores()
+                if self.level.result == "lose":
+                    self.state = "menu"
+                elif self.level.result == "win":
+                    self.state = "score"
+                break
             self.draw()
             self.clock.tick(FPS)
             if not self.running:
@@ -60,12 +79,30 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key in (pygame.K_RETURN, pygame.K_ESCAPE):
                         showing = False
-
             self.score_background.draw()
-            title = font.render("SCORE", True, (255, 255, 255))
-            hint = font.render("Pressione ENTER ou ESC para voltar", True, (255, 255, 255))
-            self.window.blit(title, title.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2 - 20)))
-            self.window.blit(hint, hint.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2 + 20)))
+            title = font.render("LAST SCORES", True, (255, 255, 255))
+            self.window.blit(
+                title,
+                title.get_rect(center=(WIN_WIDTH // 2, 60))
+            )
+            scores = self.db.get_last_scores()
+            if len(scores) == 0:
+                text = font.render("No scores yet", True, (255, 255, 255))
+                self.window.blit(
+                    text,
+                    text.get_rect(center=(WIN_WIDTH // 2, 140))
+                )
+            else:
+                for i, (score, date) in enumerate(scores):
+                    text = font.render(
+                        f"{i + 1}. {score}",
+                        True,
+                        (255, 255, 255)
+                    )
+                    self.window.blit(
+                        text,
+                        text.get_rect(center=(WIN_WIDTH // 2, 140 + i * 35))
+                    )
             pygame.display.flip()
             self.clock.tick(FPS)
 
