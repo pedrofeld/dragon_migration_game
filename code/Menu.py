@@ -4,6 +4,8 @@ from pygame.font import Font
 
 from code.Background import Background
 from code.Consts import WIN_WIDTH, MENU_OPTION, FPS, C_BLACK, MENU_MUSIC_PATH, C_GREEN, BG_MENU_PATH
+from code.HUD import HUD
+
 
 class Menu:
     def __init__(self, window):
@@ -26,6 +28,7 @@ class Menu:
                 else:
                     self.menu_text(20, MENU_OPTION[i], C_BLACK, ((WIN_WIDTH / 2), 200 + 25 * i))
 
+            HUD.draw_instructions(self)
             pygame.display.flip()
             self.clock.tick(FPS)
 
