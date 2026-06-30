@@ -26,17 +26,13 @@ class Level:
 
     def update(self):
         self.dragon.move()
-
         now = pygame.time.get_ticks()
-
         elapsed = now - self.start_time
         self.remaining = max(0, self.game_duration - elapsed)
-
         seconds = self.remaining // 1000
         minutes = seconds // 60
         seconds = seconds % 60
         self.time_text = f"{minutes:02}:{seconds:02}"
-
         elapsed_seconds = elapsed // 1000
         damage = 1
         if elapsed_seconds >= 60:
@@ -45,45 +41,33 @@ class Level:
             damage = 3
         if elapsed_seconds >= 180:
             damage = 4
-
         if now - self.last_damage >= 1000:
             self.dragon.take_damage(damage)
             self.last_damage = now
-
         if now - self.last_spawn >= self.spawn_interval_ms:
             self.spawn_bird()
             self.last_spawn = now
-
         if self.remaining <= 0:
             self.win = True
-
         for bird in self.birds[:]:
             bird.update(self.dragon)
-
             EntityMediator.process_collision(self.dragon, bird)
-
             if bird.rect.right < 0:
                 self.birds.remove(bird)
-
         EntityMediator.verify_health(self.birds)
-
         if self.dragon.hp <= 0:
             self.finished = True
             self.result = "lose"
-
         if self.remaining <= 0 and self.dragon.hp > 0:
             self.finished = True
             self.result = "win"
-
         if self.finished:
             return
 
     def draw(self):
         self.window.blit(self.dragon.image, self.dragon.rect)
-
         for bird in self.birds:
             self.window.blit(bird.image, bird.rect)
-
         HUD.draw_hp(self.window, self.dragon.hp)
         HUD.draw_score(self.window, self.dragon.score)
         HUD.draw_timer(self.window, self.time_text)

@@ -35,7 +35,7 @@ class Game:
                 self.state = "game"
                 self.game_loop()
                 if self.state == "score":
-                    self.show_score_screen()
+                    self.show_score_screen(self.level.result)
                     self.state = "menu"
             elif choice == "SCORE":
                     self.show_score_screen()
@@ -54,7 +54,7 @@ class Game:
                 )
                 self.db.remove_old_scores()
                 if self.level.result == "lose":
-                    self.state = "menu"
+                    self.state = "score"
                 elif self.level.result == "win":
                     self.state = "score"
                 break
@@ -65,7 +65,7 @@ class Game:
             if self.state != "game":
                 break
 
-    def show_score_screen(self):
+    def show_score_screen(self, result=None):
         showing = True
         font = pygame.font.SysFont("Lucida Sans Typewriter", 28)
         pygame.mixer.music.load(SCORE_MUSIC_PATH)
@@ -81,6 +81,18 @@ class Game:
                         showing = False
             self.score_background.draw()
             title = font.render("LAST SCORES", True, (255, 255, 255))
+            if result == "win":
+                result_text = font.render("YOU WIN!", True, (0, 255, 0))
+                self.window.blit(
+                    result_text,
+                    result_text.get_rect(center=(WIN_WIDTH // 2, 100))
+                )
+            elif result == "lose":
+                result_text = font.render("YOU LOSE", True, (255, 0, 0))
+                self.window.blit(
+                    result_text,
+                    result_text.get_rect(center=(WIN_WIDTH // 2, 100))
+                )
             self.window.blit(
                 title,
                 title.get_rect(center=(WIN_WIDTH // 2, 60))
